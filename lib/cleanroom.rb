@@ -79,7 +79,7 @@ module Cleanroom
       unless public_method_defined?(name)
         raise NameError, "undefined method `#{name}' for class `#{self.name}'"
       end
-
+      exposed_methods_with_kwargs[name] = true if instance_method(name).parameters.any? { |(arg_type, arg_name)| KWARGS_TYPES.include?(arg_type) }
       exposed_methods[name] = true
     end
 
@@ -94,6 +94,41 @@ module Cleanroom
 
     private
 
+    # Define the types of argument types that point kwargs arguments.
+    # Useful to treat them differently as when defining a method with kwargs, Ruby will pass parameters having a to_hash method differently to such methods:
+    #
+    # See this example illustrating the difference in treatment with and without kwargs in the method definition:
+    # def without_kwargs(*args)
+    #   p args
+    # end
+    # def with_kwargs(*args, **kwargs)
+    #   p args
+    #   p kwargs
+    # end
+    # s_without_to_hash = 'Without to_hash'
+    # s_with_to_hash = 'With to_hash'
+    # s_with_to_hash.define_singleton_method(:to_hash) { { string: self.to_s } }
+    # without_kwargs(s_without_to_hash)
+    #   ["Without to_hash"]
+    # without_kwargs(s_with_to_hash)
+    #   ["With to_hash"]
+    # with_kwargs(s_without_to_hash)
+    #   ["Without to_hash"]
+    #   {}
+    # with_kwargs(s_with_to_hash)
+    #   []
+    #   {:string=>"With to_hash"}
+    KWARGS_TYPES = %i[key keyreq]
+
+    #
+    # The list of exposed methods with kwargs.
+    #
+    # @return [Hash]
+    #
+    def exposed_methods_with_kwargs
+      @exposed_methods_with_kwargs ||= from_superclass(:exposed_methods_with_kwargs, {}).dup
+    end
+
     #
     # The cleanroom instance for this class. This method is intentionally
     # NOT cached!
@@ -102,6 +137,7 @@ module Cleanroom
     #
     def cleanroom
       exposed = exposed_methods.keys
+      exposed_with_kwargs = exposed_methods_with_kwargs.keys
       parent = self.name || 'Anonymous'
 
       Class.new(Object) do
@@ -125,9 +161,15 @@ module Cleanroom
           end
         end
 
-        exposed.each do |exposed_method|
+        (exposed - exposed_with_kwargs).each do |exposed_method|
           define_method(exposed_method) do |*args, &block|
             __instance__.public_send(exposed_method, *args, &block)
+          end
+        end
+
+        exposed_with_kwargs.each do |exposed_method|
+          define_method(exposed_method) do |*args, **kwargs, &block|
+            __instance__.public_send(exposed_method, *args, **kwargs, &block)
           end
         end
 

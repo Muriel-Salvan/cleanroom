@@ -28,6 +28,23 @@ describe Cleanroom do
       def method_3
         @method_3 = true
       end
+
+      def method_without_kwargs(arg_1)
+        @method_without_kwargs_args = {
+          arg_1: arg_1
+        }
+      end
+      expose :method_without_kwargs
+      attr_reader :method_without_kwargs_args
+
+      def method_with_kwargs(arg_1, kwarg_1: 'kwarg_value_1')
+        @method_with_kwargs_args = {
+          arg_1: arg_1,
+          kwarg_1: kwarg_1
+        }
+      end
+      expose :method_with_kwargs
+      attr_reader :method_with_kwargs_args
     end
   end
 
@@ -91,6 +108,45 @@ describe Cleanroom do
         EOH
       }.to raise_error(Cleanroom::InaccessibleError)
       expect(instance.instance_variables).to_not include(:@method_3)
+    end
+  end
+
+  describe 'kwargs handling' do
+    it 'does not generate warnings when passing kwargs' do
+      expect do
+        instance.evaluate <<~EOH
+          method_with_kwargs('arg_1_value', kwarg_1: 'kwarg_value')
+        EOH
+      end.not_to output.to_stderr
+      expect(instance.method_with_kwargs_args).to eq(
+        arg_1: 'arg_1_value',
+        kwarg_1: 'kwarg_value'
+      )
+    end
+
+    it 'does not extrapolate objects using to_hash to methods not receiving kwargs' do
+      instance.evaluate <<~EOH
+        string_with_to_hash = 'Hello'
+        string_with_to_hash.define_singleton_method(:to_hash) { { string: self.to_s } }
+        method_without_kwargs(string_with_to_hash)
+      EOH
+      expect(instance.method_without_kwargs_args).to eq(
+        arg_1: 'Hello'
+      )
+    end
+
+    it 'does extrapolate objects using to_hash to methods receiving kwargs without warnings' do
+      expect do
+        instance.evaluate <<~EOH
+          string_with_to_hash = 'Hello'
+          string_with_to_hash.define_singleton_method(:to_hash) { { kwarg_1: self.to_s } }
+          method_with_kwargs(string_with_to_hash, **string_with_to_hash)
+        EOH
+      end.not_to output.to_stderr
+      expect(instance.method_with_kwargs_args).to eq(
+        arg_1: 'Hello',
+        kwarg_1: 'Hello'
+      )
     end
   end
 end
