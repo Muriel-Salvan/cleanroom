@@ -153,7 +153,15 @@ module Cleanroom
 
         define_method(:initialize) do |instance|
           define_singleton_method(:__instance__) do
-            unless caller[0].include?(__FILE__)
+            # Since Ruby 2.6, the first frame of `caller` for code evaluated via
+            # `instance_eval`/`eval` is labeled "(eval at <file>:<line>)", where
+            # the location is the very call site of `instance_eval` - here
+            # cleanroom.rb itself. That made the previous
+            # `caller[0].include?(__FILE__)` check wrongly grant DSL code access
+            # to the wrapped instance. Eval frames must be excluded: only real
+            # frames inside this file may call __instance__.
+            calling_frame = caller_locations(1, 1).first
+            unless calling_frame && !calling_frame.path.start_with?('(') && calling_frame.path.include?(__FILE__)
               raise Cleanroom::InaccessibleError.new(:__instance__, self)
             end
 
