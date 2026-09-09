@@ -182,13 +182,8 @@ describe Cleanroom do
 
     it 'prevents calls to the instance directly' do
       cleanroom = klass.send(:cleanroom).new(instance)
-      expect do
-        cleanroom.__instance__
-      end.to raise_error(Cleanroom::InaccessibleError)
-
-      expect do
-        cleanroom.send(:__instance__)
-      end.to raise_error(Cleanroom::InaccessibleError)
+      expect { cleanroom.__instance__ }.to raise_error(Cleanroom::InaccessibleError)
+      expect { cleanroom.send(:__instance__) }.to raise_error(Cleanroom::InaccessibleError)
     end
   end
 

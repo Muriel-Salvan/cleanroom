@@ -19,6 +19,14 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
 
+# It's ok to have longer methods while keeping readability
+Metrics/AbcSize:
+  Max: 40
+
+# It's ok to have longer methods while keeping readability
+Metrics/MethodLength:
+  Max: 40
+
 # kwargs should not count towards max parameters list.
 Metrics/ParameterLists:
   CountKeywordArgs: false
@@ -35,6 +43,14 @@ RSpec/DescribeClass:
     - 'spec/scenarios/documentation_spec.rb'
     - 'spec/scenarios/packaging_spec.rb'
     - 'spec/unit/rspec_spec.rb'
+
+# It's ok to have longer test cases while keeping readability
+RSpec/ExampleLength:
+  Max: 30
+
+# It's ok to have longer test cases while keeping readability
+RSpec/MultipleExpectations:
+  Max: 10
 
 # I don't want to pollute my code with something that should be integrated in the language
 Style/FrozenStringLiteralComment:
