@@ -1,10 +1,13 @@
 require 'spec_helper'
 
+# Sentinel object used as a default argument value, to distinguish "no value
+# passed" from any real value, including nil and false. Compared by identity
+# (equal?) so nothing else can ever match it.
+NULL = Object.new.freeze
+
 describe Cleanroom do
   let(:klass) do
     Class.new do
-      NULL = Object.new.freeze unless defined?(NULL)
-
       include Cleanroom
 
       def method1(val = NULL)
