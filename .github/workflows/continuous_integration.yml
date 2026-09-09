@@ -1,0 +1,65 @@
+name: continuous-integration
+on:
+  - push
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check-out code
+        uses: actions/checkout@v6
+
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Run unit tests
+        run: bundle exec rspec --format documentation
+
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  package:
+    needs: test
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+
+      - name: Check-out code
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Check if CI needs to be skipped
+        uses: mstachniuk/ci-skip@v1
+        with:
+          fail-fast: true
+
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Install Node
+        uses: actions/setup-node@v6
+
+      - name: Install semantic-release
+        run: npm install @semantic-release/git@9.0.1 @semantic-release/changelog@5.0.1 @semantic-release/exec@5.0.0 semantic-release-rubygem -D
+
+      - name: Configure RubyGems credentials
+        uses: rubygems/configure-rubygems-credentials@main
+
+      - name: Semantic releasing
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{secrets.SEMANTIC_RELEASE_GH_TOKEN}}
