@@ -23,12 +23,18 @@ Layout/MultilineOperationIndentation:
 Metrics/ParameterLists:
   CountKeywordArgs: false
 
+# Some tests use the be_an_exposed_method_on matcher that requires symbols to be validated.
+RSpec/ExpectActual:
+  Exclude:
+    - spec/unit/rspec_spec.rb
+
 # These tests are not describing any class or module
 RSpec/DescribeClass:
   Exclude:
     - 'spec/scenarios/code_quality_spec.rb'
     - 'spec/scenarios/documentation_spec.rb'
     - 'spec/scenarios/packaging_spec.rb'
+    - 'spec/unit/rspec_spec.rb'
 
 # I don't want to pollute my code with something that should be integrated in the language
 Style/FrozenStringLiteralComment:

@@ -57,18 +57,18 @@ describe Cleanroom do
     end
 
     it 'gets the absolute path to the file' do
-      expect(File).to receive(:expand_path).with(path).once
       klass.evaluate_file(instance, path)
+      expect(File).to have_received(:expand_path).with(path).once
     end
 
     it 'reads the contents to a string' do
-      expect(IO).to receive(:read).with(path).once
       klass.evaluate_file(instance, path)
+      expect(IO).to have_received(:read).with(path).once
     end
 
     it 'evaluates the contents' do
-      expect(klass).to receive(:evaluate).with(instance, contents, path, 1).once
       klass.evaluate_file(instance, path)
+      expect(klass).to have_received(:evaluate).with(instance, contents, path, 1).once
     end
   end
 
@@ -90,13 +90,13 @@ describe Cleanroom do
     end
 
     it 'creates a new cleanroom object' do
-      expect(cleanroom).to receive(:new).with(instance).once
       klass.evaluate(instance, string)
+      expect(cleanroom).to have_received(:new).with(instance).once
     end
 
     it 'evaluates against the new cleanroom object' do
-      expect(cleanroom_instance).to receive(:instance_eval).with(string).once
       klass.evaluate(instance, string)
+      expect(cleanroom_instance).to have_received(:instance_eval).with(string).once
     end
   end
 
@@ -201,8 +201,8 @@ describe Cleanroom do
     end
 
     it 'delegates to the class method' do
-      expect(klass).to receive(:evaluate_file).with(instance, path)
       instance.evaluate_file(path)
+      expect(klass).to have_received(:evaluate_file).with(instance, path)
     end
 
     it 'returns self' do
@@ -219,8 +219,8 @@ describe Cleanroom do
     end
 
     it 'delegates to the class method' do
-      expect(klass).to receive(:evaluate).with(instance, string)
       instance.evaluate(string)
+      expect(klass).to have_received(:evaluate).with(instance, string)
     end
 
     it 'returns self' do
