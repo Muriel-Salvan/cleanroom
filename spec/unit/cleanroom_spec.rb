@@ -73,8 +73,8 @@ describe Cleanroom do
   end
 
   describe '.evaluate' do
-    let(:cleanroom) { double('Cleanroom.cleanroom') }
-    let(:cleanroom_instance) { double('Cleanroom.cleanroom_instance') }
+    let(:cleanroom) { class_double(Class) }
+    let(:cleanroom_instance) { instance_double(Object) }
 
     let(:string) { '"hello"' }
 
