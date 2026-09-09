@@ -15,6 +15,7 @@
 #
 
 module Cleanroom
+  # Base class for errors raised by Cleanroom
   class Error < StandardError; end
 
   # Error raised when trying to access a non accessible variable or method
@@ -25,6 +26,7 @@ module Cleanroom
       @instance = instance
     end
 
+    # @return [String] The error message
     def to_s
       <<~ERROR_MESSAGE.gsub(/\r?\n/, ' ')
         Undefined local variable or method `#{@name}' for #{@instance}. It may have
