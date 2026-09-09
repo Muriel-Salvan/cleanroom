@@ -17,7 +17,7 @@ RSpec.describe 'Gem packaging' do
 
       # Verify generated gem specification
       lines = `gem specification #{gem_file}`.lines
-      gem_spec = YAML.load(
+      gem_spec = YAML.safe_load(
         lines[(lines.index { |line| line.start_with?('---') })..].join,
         permitted_classes: [
           Gem::Specification,

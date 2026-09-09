@@ -13,7 +13,7 @@ RSpec.configure do |config|
   end
 
   # Create and clear tmp_path on each run
-  config.before(:each) do
+  config.before do
     FileUtils.rm_rf(tmp_path)
     FileUtils.mkdir_p(tmp_path)
   end
@@ -31,6 +31,5 @@ end
 # @return [String]
 #
 def tmp_path(*paths)
-  root = File.expand_path('../..', __FILE__)
   File.join('tmp', *paths)
 end

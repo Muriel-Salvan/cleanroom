@@ -17,17 +17,20 @@
 module Cleanroom
   class Error < StandardError; end
 
+  # Error raised when trying to access a non accessible variable or method
   class InaccessibleError < Error
     def initialize(name, instance)
-      @name, @instance = name, instance
+      super()
+      @name = name
+      @instance = instance
     end
 
     def to_s
-<<-EOH.gsub(/\r?\n/, ' ')
-Undefined local variable or method `#{@name}' for #{@instance}. It may have
-been removed for the purposes of evaluating the DSL or for added security. If
-you feel you have reached this message in error, please open an issue.
-EOH
+      <<~ERROR_MESSAGE.gsub(/\r?\n/, ' ')
+        Undefined local variable or method `#{@name}' for #{@instance}. It may have
+        been removed for the purposes of evaluating the DSL or for added security. If
+        you feel you have reached this message in error, please open an issue.
+      ERROR_MESSAGE
     end
   end
 end

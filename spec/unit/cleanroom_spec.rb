@@ -57,24 +57,24 @@ describe Cleanroom do
     end
 
     it 'gets the absolute path to the file' do
-      expect(File).to receive(:expand_path).with(path).once
       klass.evaluate_file(instance, path)
+      expect(File).to have_received(:expand_path).with(path).once
     end
 
     it 'reads the contents to a string' do
-      expect(IO).to receive(:read).with(path).once
       klass.evaluate_file(instance, path)
+      expect(IO).to have_received(:read).with(path).once
     end
 
     it 'evaluates the contents' do
-      expect(klass).to receive(:evaluate).with(instance, contents, path, 1).once
       klass.evaluate_file(instance, path)
+      expect(klass).to have_received(:evaluate).with(instance, contents, path, 1).once
     end
   end
 
   describe '.evaluate' do
-    let(:cleanroom) { double('Cleanroom.cleanroom') }
-    let(:cleanroom_instance) { double('Cleanroom.cleanroom_instance') }
+    let(:cleanroom) { class_double(Class) }
+    let(:cleanroom_instance) { instance_double(Object) }
 
     let(:string) { '"hello"' }
 
@@ -90,13 +90,13 @@ describe Cleanroom do
     end
 
     it 'creates a new cleanroom object' do
-      expect(cleanroom).to receive(:new).with(instance).once
       klass.evaluate(instance, string)
+      expect(cleanroom).to have_received(:new).with(instance).once
     end
 
     it 'evaluates against the new cleanroom object' do
-      expect(cleanroom_instance).to receive(:instance_eval).with(string).once
       klass.evaluate(instance, string)
+      expect(cleanroom_instance).to have_received(:instance_eval).with(string).once
     end
   end
 
@@ -108,15 +108,17 @@ describe Cleanroom do
         def public_method; end
 
         protected
+
         def protected_method; end
 
         private
+
         def private_method; end
       end
     end
 
     it 'exposes the method when it is public' do
-      expect { klass.expose(:public_method) }.to_not raise_error
+      expect { klass.expose(:public_method) }.not_to raise_error
       expect(klass.exposed_methods).to include(:public_method)
     end
 
@@ -144,48 +146,44 @@ describe Cleanroom do
       Class.new do
         include Cleanroom
 
-        def method_1
-          @method_1 = true
+        def method1
+          @method1 = true
         end
-        expose :method_1
+        expose :method1
 
-        def method_2
-          @method_2 = true
+        def method2
+          @method2 = true
         end
-        expose :method_2
+        expose :method2
       end
     end
 
     it 'creates a new anonymous class each time' do
-      a, b = klass.send(:cleanroom), klass.send(:cleanroom)
-      expect(a).to_not be(b)
+      a = klass.send(:cleanroom)
+      b = klass.send(:cleanroom)
+      expect(a).not_to be(b)
     end
 
     it 'creates a method for each exposed one on the proxy object' do
       cleanroom = klass.send(:cleanroom)
 
-      expect(cleanroom).to be_public_method_defined(:method_1)
-      expect(cleanroom).to be_public_method_defined(:method_2)
+      expect(cleanroom).to be_public_method_defined(:method1)
+      expect(cleanroom).to be_public_method_defined(:method2)
     end
 
     it 'calls the proxied method' do
       cleanroom = klass.send(:cleanroom).new(instance)
-      cleanroom.method_1
-      cleanroom.method_2
+      cleanroom.method1
+      cleanroom.method2
 
-      expect(instance.instance_variable_get(:@method_1)).to be(true)
-      expect(instance.instance_variable_get(:@method_2)).to be(true)
+      expect(instance.instance_variable_get(:@method1)).to be(true)
+      expect(instance.instance_variable_get(:@method2)).to be(true)
     end
 
     it 'prevents calls to the instance directly' do
       cleanroom = klass.send(:cleanroom).new(instance)
-      expect {
-        cleanroom.__instance__
-      }.to raise_error(Cleanroom::InaccessibleError)
-
-      expect {
-        cleanroom.send(:__instance__)
-      }.to raise_error(Cleanroom::InaccessibleError)
+      expect { cleanroom.__instance__ }.to raise_error(Cleanroom::InaccessibleError)
+      expect { cleanroom.send(:__instance__) }.to raise_error(Cleanroom::InaccessibleError)
     end
   end
 
@@ -198,8 +196,8 @@ describe Cleanroom do
     end
 
     it 'delegates to the class method' do
-      expect(klass).to receive(:evaluate_file).with(instance, path)
       instance.evaluate_file(path)
+      expect(klass).to have_received(:evaluate_file).with(instance, path)
     end
 
     it 'returns self' do
@@ -216,8 +214,8 @@ describe Cleanroom do
     end
 
     it 'delegates to the class method' do
-      expect(klass).to receive(:evaluate).with(instance, string)
       instance.evaluate(string)
+      expect(klass).to have_received(:evaluate).with(instance, string)
     end
 
     it 'returns self' do
@@ -245,21 +243,21 @@ describe Cleanroom do
     let(:instance) { child.new }
 
     it 'inherits the parent DSL methods' do
-      expect {
-        instance.evaluate("parent_method")
-      }.to_not raise_error
+      expect do
+        instance.evaluate('parent_method')
+      end.not_to raise_error
     end
 
     it 'allows for custom DSL methods' do
-      expect {
-        instance.evaluate("child_method")
-      }.to_not raise_error
+      expect do
+        instance.evaluate('child_method')
+      end.not_to raise_error
     end
 
     it 'does not change the parent DSL' do
-      expect {
-        parent.new.evaluate("child_method")
-      }.to raise_error(NameError)
+      expect do
+        parent.new.evaluate('child_method')
+      end.to raise_error(NameError)
     end
   end
 end

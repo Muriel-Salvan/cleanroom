@@ -16,18 +16,16 @@
 
 require_relative '../cleanroom'
 
-unless defined?(RSpec)
-  require 'rspec'
-end
+require 'rspec' unless defined?(RSpec)
 
 #
 # Assert a given method is exposed on a class.
 #
 # @example Checking against an instance
-#   expect(:method_1).to be_an_exposed_method_on(instance)
+#   expect(:method1).to be_an_exposed_method_on(instance)
 #
 # @example Checking against a class
-#   expect(:method_1).to be_an_exposed_method_on(klass)
+#   expect(:method1).to be_an_exposed_method_on(klass)
 #
 RSpec::Matchers.define :be_an_exposed_method_on do |object|
   match do |name|
@@ -43,10 +41,10 @@ end
 # Assert a given class or instance has an exposed method.
 #
 # @example Checking against an instance
-#   expect(instance).to have_exposed_method(:method_1)
+#   expect(instance).to have_exposed_method(:method1)
 #
 # @example Checking against a class
-#   expect(klass).to have_exposed_method(:method_1)
+#   expect(klass).to have_exposed_method(:method1)
 #
 RSpec::Matchers.define :have_exposed_method do |name|
   match do |object|
@@ -57,4 +55,3 @@ RSpec::Matchers.define :have_exposed_method do |name|
     end
   end
 end
-

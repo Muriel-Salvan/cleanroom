@@ -17,6 +17,9 @@
 require_relative 'cleanroom/errors'
 require_relative 'cleanroom/version'
 
+# The cleanroom pattern is a safer, more convenient, Ruby-like approach for
+# limiting the information exposed by a DSL while giving users the ability to
+# write awesome code!
 module Cleanroom
   #
   # Callback for when this module is included.
@@ -52,7 +55,7 @@ module Cleanroom
     #
     def evaluate_file(instance, filepath)
       absolute_path = File.expand_path(filepath)
-      file_contents = IO.read(absolute_path)
+      file_contents = File.read(absolute_path)
       evaluate(instance, file_contents, absolute_path, 1)
     end
 
@@ -61,13 +64,11 @@ module Cleanroom
     #
     # @param [Class] instance
     #   the instance of the class to evaluate against
-    # @param [Array<String>] args
+    # @param [...]
     #   the args to +instance_eval+
-    # @param [Proc] block
-    #   the block to +instance_eval+
     #
-    def evaluate(instance, *args, &block)
-      cleanroom.new(instance).instance_eval(*args, &block)
+    def evaluate(instance, ...)
+      cleanroom.new(instance).instance_eval(...)
     end
 
     #
@@ -76,10 +77,9 @@ module Cleanroom
     # @param [Symbol] name
     #
     def expose(name)
-      unless public_method_defined?(name)
-        raise NameError, "undefined method `#{name}' for class `#{self.name}'"
-      end
-      exposed_methods_with_kwargs[name] = true if instance_method(name).parameters.any? { |(arg_type, arg_name)| KWARGS_TYPES.include?(arg_type) }
+      raise NameError, "undefined method `#{name}' for class `#{self.name}'" unless public_method_defined?(name)
+
+      exposed_methods_with_kwargs[name] = true if instance_method(name).parameters.any? { |(arg_type, _arg_name)| KWARGS_TYPES.include?(arg_type) }
       exposed_methods[name] = true
     end
 
@@ -138,7 +138,7 @@ module Cleanroom
     def cleanroom
       exposed = exposed_methods.keys
       exposed_with_kwargs = exposed_methods_with_kwargs.keys
-      parent = self.name || 'Anonymous'
+      parent = name || 'Anonymous'
 
       Class.new(Object) do
         class << self
@@ -198,14 +198,15 @@ module Cleanroom
     # subclassing, this is a required check to ensure subclasses inherit
     # exposed DSL methods.
     #
-    # @param [Symbol] m
+    # @param [Symbol] method_name
     #   the name of the method to find
     # @param [Object] default
     #   the default value to return if not found
     #
-    def from_superclass(m, default = nil)
+    def from_superclass(method_name, default = nil)
       return default if superclass == Cleanroom
-      superclass.respond_to?(m) ? superclass.send(m) : default
+
+      superclass.respond_to?(method_name) ? superclass.send(method_name) : default
     end
   end
 
@@ -230,8 +231,8 @@ module Cleanroom
     # @param (see Cleanroom.evaluate_file)
     # @return [self]
     #
-    def evaluate(*args, &block)
-      self.class.evaluate(self, *args, &block)
+    def evaluate(...)
+      self.class.evaluate(self, ...)
       self
     end
   end
