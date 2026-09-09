@@ -64,9 +64,6 @@ module Cleanroom
     #
     # @param [Class] instance
     #   the instance of the class to evaluate against
-    # @param [...]
-    #   the args to +instance_eval+
-    #
     def evaluate(instance, ...)
       cleanroom.new(instance).instance_eval(...)
     end
