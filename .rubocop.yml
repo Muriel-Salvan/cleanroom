@@ -19,6 +19,10 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
 
+# I don't want to pollute my code with something that should be integrated in the language
+Lint/UselessConstantScoping:
+  Enabled: false
+
 # It's ok to have longer methods while keeping readability
 Metrics/AbcSize:
   Max: 40

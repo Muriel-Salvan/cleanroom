@@ -17,8 +17,10 @@
 module Cleanroom
   class Error < StandardError; end
 
+  # Error raised when trying to access a non accessible variable or method
   class InaccessibleError < Error
     def initialize(name, instance)
+      super()
       @name = name
       @instance = instance
     end

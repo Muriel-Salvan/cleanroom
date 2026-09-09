@@ -17,6 +17,9 @@
 require_relative 'cleanroom/errors'
 require_relative 'cleanroom/version'
 
+# The cleanroom pattern is a safer, more convenient, Ruby-like approach for
+# limiting the information exposed by a DSL while giving users the ability to
+# write awesome code!
 module Cleanroom
   #
   # Callback for when this module is included.
@@ -195,15 +198,15 @@ module Cleanroom
     # subclassing, this is a required check to ensure subclasses inherit
     # exposed DSL methods.
     #
-    # @param [Symbol] m
+    # @param [Symbol] method_name
     #   the name of the method to find
     # @param [Object] default
     #   the default value to return if not found
     #
-    def from_superclass(m, default = nil)
+    def from_superclass(method_name, default = nil)
       return default if superclass == Cleanroom
 
-      superclass.respond_to?(m) ? superclass.send(m) : default
+      superclass.respond_to?(method_name) ? superclass.send(method_name) : default
     end
   end
 
