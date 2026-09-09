@@ -1,12 +1,10 @@
 Ruby Cleanroom
 ==============
 [![Gem Version](http://img.shields.io/gem/v/cleanroom.svg)][gem]
-[![Build Status](http://img.shields.io/travis/sethvargo/cleanroom.svg)][travis]
-[![Code Climate](http://img.shields.io/codeclimate/github/sethvargo/cleanroom.svg)][codeclimate]
 
 [gem]: https://rubygems.org/gems/cleanroom
-[travis]: http://travis-ci.org/sethvargo/cleanroom
-[codeclimate]: https://codeclimate.com/github/sethvargo/cleanroom
+
+**Note:** This project is now maintained by [Muriel Salvan](https://github.com/Muriel-Salvan) as a fork of the [original cleanroom repository](https://github.com/sethvargo/cleanroom). The original repository by Seth Vargo is no longer maintained. This fork continues the maintenance of the `cleanroom` Ruby gem and is compatible with Ruby >= 3.
 
 Ruby is an excellent programming language for creating and managing custom DSLs, but how can you securely evaluate a DSL while explicitly controlling the methods exposed to the user? Our good friends `instance_eval` and `instance_exec` are great, but they expose all methods - public, protected, and private - to the user. Even worse, they expose the ability to accidentally or intentionally alter the behavior of the system! The cleanroom pattern is a safer, more convenient, Ruby-like approach for limiting the information exposed by a DSL while giving users the ability to write awesome code!
 
@@ -167,7 +165,7 @@ self.class.instance_eval { } #=> Cleanroom::InaccessibleError
 
 Fourth, when delegating to the underlying instance object, `public_send` (as opposed to `send` or `__send__`) is used. Even if an attacker could somehow bypass the previous safeguards, they would be unable to call non-public methods on the delegate object.
 
-If you find a security hole in the cleanroom implementation, please email me at the contact info found in my [GitHub profile](https://github.com/sethvargo). **Do not open an issue!**
+If you find a security hole in the cleanroom implementation, please reach out via the contact info found in the [GitHub profile](https://github.com/Muriel-Salvan). **Do not open an issue!**
 
 
 Testing
@@ -209,6 +207,7 @@ License
 -------
 ```text
 Copyright 2014 Seth Vargo <sethvargo@gmail.com>
+Copyright 2026 Muriel Salvan <muriel@x-aeon.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -222,4 +221,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-

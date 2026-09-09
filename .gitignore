@@ -1,35 +1,12 @@
-### Ruby ###
-*.gem
-*.rbc
-/.config
-/coverage/
-/InstalledFiles
-/pkg/
-/spec/reports/
-/test/tmp/
-/test/version_tmp/
-/tmp/
-
-## Specific to RubyMotion:
-.dat*
-.repl_history
-build/
-
-## Documentation cache and generated files:
-/.yardoc/
-/_yardoc/
-/doc/
-/rdoc/
-
-## Environment normalisation:
-/.bundle/
-/vendor/bundle
-/lib/bundler/man/
-
-## Ruby gem
+# This repo builds a Rubygem. No lock file then.
 Gemfile.lock
-.ruby-version
-.ruby-gemset
 
-# unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
-.rvmrc
+# Yard is used to generate doc. Don't commit generated yard files.
+/.yardoc/
+/doc/
+
+# SimpleCov is used to generate code coverage reports. Don't commit generated coverage files.
+/coverage/
+
+# Tests temporary artefacts
+/tmp
