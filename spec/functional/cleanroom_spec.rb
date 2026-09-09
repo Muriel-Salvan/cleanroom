@@ -7,40 +7,40 @@ describe Cleanroom do
 
       include Cleanroom
 
-      def method_1(val = NULL)
+      def method1(val = NULL)
         if val.equal?(NULL)
-          @method_1
+          @method1
         else
-          @method_1 = val
+          @method1 = val
         end
       end
-      expose :method_1
+      expose :method1
 
-      def method_2(val = NULL)
+      def method2(val = NULL)
         if val.equal?(NULL)
-          @method_2
+          @method2
         else
-          @method_2 = val
+          @method2 = val
         end
       end
-      expose :method_2
+      expose :method2
 
-      def method_3
-        @method_3 = true
+      def method3
+        @method3 = true
       end
 
-      def method_without_kwargs(arg_1)
+      def method_without_kwargs(arg1)
         @method_without_kwargs_args = {
-          arg_1: arg_1
+          arg1: arg1
         }
       end
       expose :method_without_kwargs
       attr_reader :method_without_kwargs_args
 
-      def method_with_kwargs(arg_1, kwarg_1: 'kwarg_value_1')
+      def method_with_kwargs(arg1, kwarg1: 'kwarg_value_1')
         @method_with_kwargs_args = {
-          arg_1: arg_1,
-          kwarg_1: kwarg_1
+          arg1: arg1,
+          kwarg1: kwarg1
         }
       end
       expose :method_with_kwargs
@@ -55,30 +55,30 @@ describe Cleanroom do
 
     before do
       File.write(path, <<-EOH.gsub(/^ {10}/, ''))
-          method_1 'hello'
-          method_2 false
+          method1 'hello'
+          method2 false
       EOH
     end
 
     it 'evaluates the file' do
       instance.evaluate_file(path)
-      expect(instance.method_1).to eq('hello')
-      expect(instance.method_2).to be(false)
+      expect(instance.method1).to eq('hello')
+      expect(instance.method2).to be(false)
     end
   end
 
   describe '#evaluate' do
     let(:contents) do
       <<-EOH.gsub(/^ {8}/, '')
-        method_1 'hello'
-        method_2 false
+        method1 'hello'
+        method2 false
       EOH
     end
 
     it 'evaluates the file' do
       instance.evaluate(contents)
-      expect(instance.method_1).to eq('hello')
-      expect(instance.method_2).to be(false)
+      expect(instance.method1).to eq('hello')
+      expect(instance.method2).to be(false)
     end
   end
 
@@ -100,12 +100,12 @@ describe Cleanroom do
         instance.evaluate <<-EOH.gsub(/^ {12}/, '')
           self.class.class_eval do
             def new_method
-              __instance__.method_3
+              __instance__.method3
             end
           end
         EOH
       end.to raise_error(Cleanroom::InaccessibleError)
-      expect(instance.instance_variables).not_to include(:@method_3)
+      expect(instance.instance_variables).not_to include(:@method3)
     end
   end
 
@@ -113,12 +113,12 @@ describe Cleanroom do
     it 'does not generate warnings when passing kwargs' do
       expect do
         instance.evaluate <<~EOH
-          method_with_kwargs('arg_1_value', kwarg_1: 'kwarg_value')
+          method_with_kwargs('arg1_value', kwarg1: 'kwarg_value')
         EOH
       end.not_to output.to_stderr
       expect(instance.method_with_kwargs_args).to eq(
-        arg_1: 'arg_1_value',
-        kwarg_1: 'kwarg_value'
+        arg1: 'arg1_value',
+        kwarg1: 'kwarg_value'
       )
     end
 
@@ -129,7 +129,7 @@ describe Cleanroom do
         method_without_kwargs(string_with_to_hash)
       EOH
       expect(instance.method_without_kwargs_args).to eq(
-        arg_1: 'Hello'
+        arg1: 'Hello'
       )
     end
 
@@ -137,13 +137,13 @@ describe Cleanroom do
       expect do
         instance.evaluate <<~EOH
           string_with_to_hash = 'Hello'
-          string_with_to_hash.define_singleton_method(:to_hash) { { kwarg_1: self.to_s } }
+          string_with_to_hash.define_singleton_method(:to_hash) { { kwarg1: self.to_s } }
           method_with_kwargs(string_with_to_hash, **string_with_to_hash)
         EOH
       end.not_to output.to_stderr
       expect(instance.method_with_kwargs_args).to eq(
-        arg_1: 'Hello',
-        kwarg_1: 'Hello'
+        arg1: 'Hello',
+        kwarg1: 'Hello'
       )
     end
   end

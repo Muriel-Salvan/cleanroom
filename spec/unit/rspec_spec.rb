@@ -6,10 +6,10 @@ describe 'RSpec matchers' do
     Class.new do
       include Cleanroom
 
-      def method_1; end
-      expose :method_1
+      def method1; end
+      expose :method1
 
-      def method_2; end
+      def method2; end
     end
   end
 
@@ -18,29 +18,29 @@ describe 'RSpec matchers' do
   describe '#be_an_exposed_method_on' do
     context 'when given a class' do
       it 'is true when the method is exposed' do
-        expect(:method_1).to be_an_exposed_method_on(klass)
+        expect(:method1).to be_an_exposed_method_on(klass)
       end
 
       it 'is false when the method exists, but is not exposed' do
-        expect(:method_2).not_to be_an_exposed_method_on(klass)
+        expect(:method2).not_to be_an_exposed_method_on(klass)
       end
 
       it 'is false when the method is not exposed' do
-        expect(:method_3).not_to be_an_exposed_method_on(klass)
+        expect(:method3).not_to be_an_exposed_method_on(klass)
       end
     end
 
     context 'when given an instance' do
       it 'is true when the method is exposed' do
-        expect(:method_1).to be_an_exposed_method_on(instance)
+        expect(:method1).to be_an_exposed_method_on(instance)
       end
 
       it 'is false when the method exists, but is not exposed' do
-        expect(:method_2).not_to be_an_exposed_method_on(instance)
+        expect(:method2).not_to be_an_exposed_method_on(instance)
       end
 
       it 'is false when the method is not exposed' do
-        expect(:method_3).not_to be_an_exposed_method_on(instance)
+        expect(:method3).not_to be_an_exposed_method_on(instance)
       end
     end
   end
@@ -48,29 +48,29 @@ describe 'RSpec matchers' do
   describe '#have_exposed_method' do
     context 'when given a class' do
       it 'is true when the method is exposed' do
-        expect(klass).to have_exposed_method(:method_1)
+        expect(klass).to have_exposed_method(:method1)
       end
 
       it 'is false when the method exists, but is not exposed' do
-        expect(klass).not_to have_exposed_method(:method_2)
+        expect(klass).not_to have_exposed_method(:method2)
       end
 
       it 'is false when the method is not exposed' do
-        expect(klass).not_to have_exposed_method(:method_3)
+        expect(klass).not_to have_exposed_method(:method3)
       end
     end
 
     context 'when given an instance' do
       it 'is true when the method is exposed' do
-        expect(instance).to have_exposed_method(:method_1)
+        expect(instance).to have_exposed_method(:method1)
       end
 
       it 'is false when the method exists, but is not exposed' do
-        expect(instance).not_to have_exposed_method(:method_2)
+        expect(instance).not_to have_exposed_method(:method2)
       end
 
       it 'is false when the method is not exposed' do
-        expect(instance).not_to have_exposed_method(:method_3)
+        expect(instance).not_to have_exposed_method(:method3)
       end
     end
   end

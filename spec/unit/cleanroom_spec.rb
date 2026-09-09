@@ -146,15 +146,15 @@ describe Cleanroom do
       Class.new do
         include Cleanroom
 
-        def method_1
-          @method_1 = true
+        def method1
+          @method1 = true
         end
-        expose :method_1
+        expose :method1
 
-        def method_2
-          @method_2 = true
+        def method2
+          @method2 = true
         end
-        expose :method_2
+        expose :method2
       end
     end
 
@@ -167,17 +167,17 @@ describe Cleanroom do
     it 'creates a method for each exposed one on the proxy object' do
       cleanroom = klass.send(:cleanroom)
 
-      expect(cleanroom).to be_public_method_defined(:method_1)
-      expect(cleanroom).to be_public_method_defined(:method_2)
+      expect(cleanroom).to be_public_method_defined(:method1)
+      expect(cleanroom).to be_public_method_defined(:method2)
     end
 
     it 'calls the proxied method' do
       cleanroom = klass.send(:cleanroom).new(instance)
-      cleanroom.method_1
-      cleanroom.method_2
+      cleanroom.method1
+      cleanroom.method2
 
-      expect(instance.instance_variable_get(:@method_1)).to be(true)
-      expect(instance.instance_variable_get(:@method_2)).to be(true)
+      expect(instance.instance_variable_get(:@method1)).to be(true)
+      expect(instance.instance_variable_get(:@method2)).to be(true)
     end
 
     it 'prevents calls to the instance directly' do
