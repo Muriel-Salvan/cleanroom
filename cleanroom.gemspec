@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Seth Vargo', 'Muriel Salvan']
   spec.email         = ['sethvargo@gmail.com', 'muriel@x-aeon.com']
   spec.summary       = '(More) safely evaluate Ruby DSLs with cleanroom'
-  spec.description   = <<-EOH.gsub(/^ {4}/, '').gsub(/\r?\n/, ' ').strip
+  spec.description   = <<-DESCRIPTION.gsub(/^ {4}/, '').gsub(/\r?\n/, ' ').strip
     Ruby is an excellent programming language for creating and managing custom
     DSLs, but how can you securely evaluate a DSL while explicitly controlling
     the methods exposed to the user? Our good friends instance_eval and
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
     cleanroom pattern is a safer, more convenient, Ruby-like approach for
     limiting the information exposed by a DSL while giving users the ability to
     write awesome code!
-  EOH
+  DESCRIPTION
   spec.homepage      = 'https://github.com/Muriel-Salvan/cleanroom'
   spec.license       = 'Apache-2.0'
 

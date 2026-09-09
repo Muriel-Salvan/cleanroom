@@ -24,11 +24,11 @@ module Cleanroom
     end
 
     def to_s
-      <<~EOH.gsub(/\r?\n/, ' ')
+      <<~ERROR_MESSAGE.gsub(/\r?\n/, ' ')
         Undefined local variable or method `#{@name}' for #{@instance}. It may have
         been removed for the purposes of evaluating the DSL or for added security. If
         you feel you have reached this message in error, please open an issue.
-      EOH
+      ERROR_MESSAGE
     end
   end
 end

@@ -54,10 +54,10 @@ describe Cleanroom do
     let(:path) { tmp_path('file.rb') }
 
     before do
-      File.write(path, <<-EOH.gsub(/^ {10}/, ''))
+      File.write(path, <<-FILE_CONTENTS.gsub(/^ {10}/, ''))
           method1 'hello'
           method2 false
-      EOH
+      FILE_CONTENTS
     end
 
     it 'evaluates the file' do
@@ -69,10 +69,10 @@ describe Cleanroom do
 
   describe '#evaluate' do
     let(:contents) do
-      <<-EOH.gsub(/^ {8}/, '')
+      <<-DSL_CODE.gsub(/^ {8}/, '')
         method1 'hello'
         method2 false
-      EOH
+      DSL_CODE
     end
 
     it 'evaluates the file' do
@@ -97,13 +97,13 @@ describe Cleanroom do
 
     it 'restricts access to defining new methods' do
       expect do
-        instance.evaluate <<-EOH.gsub(/^ {12}/, '')
+        instance.evaluate <<-DSL_CODE.gsub(/^ {12}/, '')
           self.class.class_eval do
             def new_method
               __instance__.method3
             end
           end
-        EOH
+        DSL_CODE
       end.to raise_error(Cleanroom::InaccessibleError)
       expect(instance.instance_variables).not_to include(:@method3)
     end
@@ -112,9 +112,9 @@ describe Cleanroom do
   describe 'kwargs handling' do
     it 'does not generate warnings when passing kwargs' do
       expect do
-        instance.evaluate <<~EOH
+        instance.evaluate <<~DSL_CODE
           method_with_kwargs('arg1_value', kwarg1: 'kwarg_value')
-        EOH
+        DSL_CODE
       end.not_to output.to_stderr
       expect(instance.method_with_kwargs_args).to eq(
         arg1: 'arg1_value',
@@ -123,11 +123,11 @@ describe Cleanroom do
     end
 
     it 'does not extrapolate objects using to_hash to methods not receiving kwargs' do
-      instance.evaluate <<~EOH
+      instance.evaluate <<~DSL_CODE
         string_with_to_hash = 'Hello'
         string_with_to_hash.define_singleton_method(:to_hash) { { string: self.to_s } }
         method_without_kwargs(string_with_to_hash)
-      EOH
+      DSL_CODE
       expect(instance.method_without_kwargs_args).to eq(
         arg1: 'Hello'
       )
@@ -135,11 +135,11 @@ describe Cleanroom do
 
     it 'does extrapolate objects using to_hash to methods receiving kwargs without warnings' do
       expect do
-        instance.evaluate <<~EOH
+        instance.evaluate <<~DSL_CODE
           string_with_to_hash = 'Hello'
           string_with_to_hash.define_singleton_method(:to_hash) { { kwarg1: self.to_s } }
           method_with_kwargs(string_with_to_hash, **string_with_to_hash)
-        EOH
+        DSL_CODE
       end.not_to output.to_stderr
       expect(instance.method_with_kwargs_args).to eq(
         arg1: 'Hello',
