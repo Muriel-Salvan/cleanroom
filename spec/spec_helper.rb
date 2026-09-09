@@ -1,4 +1,15 @@
-require 'rspec'
+require 'simplecov'
+SimpleCov.start do
+  minimum_coverage 99
+end
+require 'simplecov-cobertura'
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
+  [
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::CoberturaFormatter
+  ]
+)
+
 require 'fileutils'
 
 require 'cleanroom'
