@@ -1,5 +1,4 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'cleanroom'
 
@@ -30,4 +29,5 @@ Gem::Specification.new do |spec|
     spec.executables << File.basename(exec_name)
   end
   spec.require_paths = ['lib']
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end

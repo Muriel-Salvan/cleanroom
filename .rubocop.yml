@@ -1,0 +1,39 @@
+plugins: rubocop-rspec
+
+AllCops:
+  NewCops: enable
+
+# Be consistent on indentations
+Layout/LineEndStringConcatenationIndentation:
+  EnforcedStyle: indented
+
+# It's ok to have longer lines
+Layout/LineLength:
+  Max: 160
+
+# Be consistent on indentations
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+# Be consistent on indentations
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+# kwargs should not count towards max parameters list.
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
+# These tests are not describing any class or module
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/scenarios/code_quality_spec.rb'
+    - 'spec/scenarios/documentation_spec.rb'
+    - 'spec/scenarios/packaging_spec.rb'
+
+# I don't want to pollute my code with something that should be integrated in the language
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: never
+
+# I don't want to pollute my code with something that should be integrated in the language
+Style/MutableConstant:
+  Enabled: false

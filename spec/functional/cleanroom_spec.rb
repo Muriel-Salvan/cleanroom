@@ -54,12 +54,10 @@ describe Cleanroom do
     let(:path) { tmp_path('file.rb') }
 
     before do
-      File.open(path, 'w') do |f|
-        f.write <<-EOH.gsub(/^ {10}/, '')
+      File.write(path, <<-EOH.gsub(/^ {10}/, ''))
           method_1 'hello'
           method_2 false
-        EOH
-      end
+      EOH
     end
 
     it 'evaluates the file' do
@@ -86,19 +84,19 @@ describe Cleanroom do
 
   describe 'security' do
     it 'restricts access to __instance__' do
-      expect {
-        instance.evaluate("__instance__")
-      }.to raise_error(Cleanroom::InaccessibleError)
+      expect do
+        instance.evaluate('__instance__')
+      end.to raise_error(Cleanroom::InaccessibleError)
     end
 
     it 'restricts access to __instance__ using :send' do
-      expect {
-        instance.evaluate("send(:__instance__)")
-      }.to raise_error(Cleanroom::InaccessibleError)
+      expect do
+        instance.evaluate('send(:__instance__)')
+      end.to raise_error(Cleanroom::InaccessibleError)
     end
 
     it 'restricts access to defining new methods' do
-      expect {
+      expect do
         instance.evaluate <<-EOH.gsub(/^ {12}/, '')
           self.class.class_eval do
             def new_method
@@ -106,8 +104,8 @@ describe Cleanroom do
             end
           end
         EOH
-      }.to raise_error(Cleanroom::InaccessibleError)
-      expect(instance.instance_variables).to_not include(:@method_3)
+      end.to raise_error(Cleanroom::InaccessibleError)
+      expect(instance.instance_variables).not_to include(:@method_3)
     end
   end
 

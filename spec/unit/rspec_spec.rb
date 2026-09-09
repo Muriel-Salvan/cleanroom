@@ -22,11 +22,11 @@ describe 'RSpec matchers' do
       end
 
       it 'is false when the method exists, but is not exposed' do
-        expect(:method_2).to_not be_an_exposed_method_on(klass)
+        expect(:method_2).not_to be_an_exposed_method_on(klass)
       end
 
       it 'is false when the method is not exposed' do
-        expect(:method_3).to_not be_an_exposed_method_on(klass)
+        expect(:method_3).not_to be_an_exposed_method_on(klass)
       end
     end
 
@@ -36,11 +36,11 @@ describe 'RSpec matchers' do
       end
 
       it 'is false when the method exists, but is not exposed' do
-        expect(:method_2).to_not be_an_exposed_method_on(instance)
+        expect(:method_2).not_to be_an_exposed_method_on(instance)
       end
 
       it 'is false when the method is not exposed' do
-        expect(:method_3).to_not be_an_exposed_method_on(instance)
+        expect(:method_3).not_to be_an_exposed_method_on(instance)
       end
     end
   end
@@ -52,11 +52,11 @@ describe 'RSpec matchers' do
       end
 
       it 'is false when the method exists, but is not exposed' do
-        expect(klass).to_not have_exposed_method(:method_2)
+        expect(klass).not_to have_exposed_method(:method_2)
       end
 
       it 'is false when the method is not exposed' do
-        expect(klass).to_not have_exposed_method(:method_3)
+        expect(klass).not_to have_exposed_method(:method_3)
       end
     end
 
@@ -66,11 +66,11 @@ describe 'RSpec matchers' do
       end
 
       it 'is false when the method exists, but is not exposed' do
-        expect(instance).to_not have_exposed_method(:method_2)
+        expect(instance).not_to have_exposed_method(:method_2)
       end
 
       it 'is false when the method is not exposed' do
-        expect(instance).to_not have_exposed_method(:method_3)
+        expect(instance).not_to have_exposed_method(:method_3)
       end
     end
   end

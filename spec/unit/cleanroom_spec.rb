@@ -108,15 +108,17 @@ describe Cleanroom do
         def public_method; end
 
         protected
+
         def protected_method; end
 
         private
+
         def private_method; end
       end
     end
 
     it 'exposes the method when it is public' do
-      expect { klass.expose(:public_method) }.to_not raise_error
+      expect { klass.expose(:public_method) }.not_to raise_error
       expect(klass.exposed_methods).to include(:public_method)
     end
 
@@ -157,8 +159,9 @@ describe Cleanroom do
     end
 
     it 'creates a new anonymous class each time' do
-      a, b = klass.send(:cleanroom), klass.send(:cleanroom)
-      expect(a).to_not be(b)
+      a = klass.send(:cleanroom)
+      b = klass.send(:cleanroom)
+      expect(a).not_to be(b)
     end
 
     it 'creates a method for each exposed one on the proxy object' do
@@ -179,13 +182,13 @@ describe Cleanroom do
 
     it 'prevents calls to the instance directly' do
       cleanroom = klass.send(:cleanroom).new(instance)
-      expect {
+      expect do
         cleanroom.__instance__
-      }.to raise_error(Cleanroom::InaccessibleError)
+      end.to raise_error(Cleanroom::InaccessibleError)
 
-      expect {
+      expect do
         cleanroom.send(:__instance__)
-      }.to raise_error(Cleanroom::InaccessibleError)
+      end.to raise_error(Cleanroom::InaccessibleError)
     end
   end
 
@@ -245,21 +248,21 @@ describe Cleanroom do
     let(:instance) { child.new }
 
     it 'inherits the parent DSL methods' do
-      expect {
-        instance.evaluate("parent_method")
-      }.to_not raise_error
+      expect do
+        instance.evaluate('parent_method')
+      end.not_to raise_error
     end
 
     it 'allows for custom DSL methods' do
-      expect {
-        instance.evaluate("child_method")
-      }.to_not raise_error
+      expect do
+        instance.evaluate('child_method')
+      end.not_to raise_error
     end
 
     it 'does not change the parent DSL' do
-      expect {
-        parent.new.evaluate("child_method")
-      }.to raise_error(NameError)
+      expect do
+        parent.new.evaluate('child_method')
+      end.to raise_error(NameError)
     end
   end
 end

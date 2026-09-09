@@ -16,9 +16,7 @@
 
 require_relative '../cleanroom'
 
-unless defined?(RSpec)
-  require 'rspec'
-end
+require 'rspec' unless defined?(RSpec)
 
 #
 # Assert a given method is exposed on a class.
@@ -57,4 +55,3 @@ RSpec::Matchers.define :have_exposed_method do |name|
     end
   end
 end
-
