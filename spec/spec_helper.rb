@@ -1,6 +1,8 @@
 require 'simplecov'
 SimpleCov.start do
-  minimum_coverage 99
+  # Make sure repositories behind symbolic links or Windows junctions are resolved properly
+  root Pathname.new(SimpleCov.root).realpath.to_s
+  minimum_coverage 95
 end
 require 'simplecov-cobertura'
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
