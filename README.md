@@ -1,10 +1,12 @@
-Ruby Cleanroom
-==============
-[![Gem Version](http://img.shields.io/gem/v/cleanroom.svg)][gem]
+Ruby Cleanroom: `cleanroom-next`
+================================
+[![Gem Version](http://img.shields.io/gem/v/cleanroom-next.svg)][gem]
 
-[gem]: https://rubygems.org/gems/cleanroom
+[gem]: https://rubygems.org/gems/cleanroom-next
 
-**Note:** This project is now maintained by [Muriel Salvan](https://github.com/Muriel-Salvan) as a fork of the [original cleanroom repository](https://github.com/sethvargo/cleanroom). The original repository by Seth Vargo is no longer maintained. This fork continues the maintenance of the `cleanroom` Ruby gem and is compatible with Ruby >= 3.
+**Note:** This project is now maintained by [Muriel Salvan](https://github.com/Muriel-Salvan) as a fork of [Seth Vargo's Cleanroom](https://github.com/sethvargo/cleanroom). The original repository by Seth Vargo is no longer maintained and has been archived. Cleanroom Next maintains its DSL evaluation model while bringing it up to date with current Ruby >= 3.
+
+**The Rubygem name of this fork is [`cleanroom-next`](https://rubygems.org/gems/cleanroom-next) but its lib files and API are living inside the `Cleanroom` module and cleanroom.rb file**. Migrating from `cleanroom` to `cleanroom-next` only requires switching the gem name in your Gemfile. Backward compatibility has been kept, no code change should be needed.
 
 Ruby is an excellent programming language for creating and managing custom DSLs, but how can you securely evaluate a DSL while explicitly controlling the methods exposed to the user? Our good friends `instance_eval` and `instance_exec` are great, but they expose all methods - public, protected, and private - to the user. Even worse, they expose the ability to accidentally or intentionally alter the behavior of the system! The cleanroom pattern is a safer, more convenient, Ruby-like approach for limiting the information exposed by a DSL while giving users the ability to write awesome code!
 
@@ -17,7 +19,7 @@ Installation
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'cleanroom'
+gem 'cleanroom-next'
 ```
 
 And then execute:
@@ -26,14 +28,14 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install cleanroom
+    $ gem install cleanroom-next
 
 
 Usage
 -----
 
 ### Setup
-In order to use the cleanroom, you must first load the cleanroom gem:
+In order to use the cleanroom, you must first load the cleanroom-next gem:
 
 ```ruby
 require 'cleanroom'

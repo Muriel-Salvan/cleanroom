@@ -1,7 +1,7 @@
 require_relative 'lib/cleanroom/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'cleanroom'
+  spec.name          = 'cleanroom-next'
   spec.version       = Cleanroom::VERSION
   spec.authors       = ['Seth Vargo', 'Muriel Salvan']
   spec.email         = ['sethvargo@gmail.com', 'muriel@x-aeon.com']
