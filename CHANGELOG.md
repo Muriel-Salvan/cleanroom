@@ -1,5 +1,5 @@
-Cleanroom CHANGELOG
-===================
+Cleanroom Next CHANGELOG
+========================
 
 v1.0.0 (August, 12, 2014)
 -------------------------

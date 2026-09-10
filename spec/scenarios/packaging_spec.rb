@@ -5,9 +5,9 @@ require 'yaml'
 RSpec.describe 'Gem packaging' do
   it 'successfully builds the gem and creates the correct file in specific test location' do
     Dir.mktmpdir do |temp_dir|
-      gem_file = File.join(temp_dir, "cleanroom-#{Cleanroom::VERSION}.gem")
+      gem_file = File.join(temp_dir, "cleanroom-next-#{Cleanroom::VERSION}.gem")
       # Run gem build command with explicit output to our test directory
-      stdout = `gem build cleanroom.gemspec --output #{gem_file}`
+      stdout = `gem build cleanroom-next.gemspec --output #{gem_file}`
 
       expect($CHILD_STATUS.exitstatus).to eq(0)
       expect(stdout).to include('Successfully built RubyGem')
@@ -28,7 +28,7 @@ RSpec.describe 'Gem packaging' do
           Symbol
         ]
       )
-      expect(gem_spec.name).to eq('cleanroom')
+      expect(gem_spec.name).to eq('cleanroom-next')
       expect(gem_spec.version.to_s).to eq(Cleanroom::VERSION)
     end
   end
